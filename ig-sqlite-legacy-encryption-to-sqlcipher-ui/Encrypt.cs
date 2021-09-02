@@ -7,7 +7,7 @@ namespace ig_sqlite_legacy_to_sqlcipher_ui
 {
     public static class Encrypt
     {
-        public static bool EncryptSqlCipher(string clearFilePath, string pasword)
+        public static bool EncryptSqlCipher(string clearFilePath, string password)
         {
             var clearFile = new FileInfo(clearFilePath);
             if (clearFile.Exists == false)
@@ -15,8 +15,8 @@ namespace ig_sqlite_legacy_to_sqlcipher_ui
 
             var sqlCipherPath = Common.GetSqlCipherEncryptedDatabasePath(clearFilePath);
 
-            var queryEncrypt = $"ATTACH DATABASE '{sqlCipherPath}' AS encrypted KEY '{pasword}'; SELECT sqlcipher_export('encrypted'); DETACH DATABASE encrypted;";
             var queryLicense = $"PRAGMA cipher_license = 'OmNpZDowMDEzbzAwMDAyV3NOV2dBQU46cGxhdGZvcm06MzI6ZXhwaXJlOjE2MzA3NjM1NjI6dmVyc2lvbjoxOmhtYWM6ODE0NjlkODM3YjBiOWIzYzEyOTA5YzhkNGNhN2M4OWYyNGE1ZGM2MQ=='";
+            var queryEncrypt = $"ATTACH DATABASE '{sqlCipherPath}' AS encrypted KEY '{password}'; SELECT sqlcipher_export('encrypted'); DETACH DATABASE encrypted;";
 
             using (var connection = new SQLiteConnection(GetSQLCEConnectionStringClearDb(clearFilePath)))
             using (var commandEncrypt = new SQLiteCommand(queryEncrypt, connection))

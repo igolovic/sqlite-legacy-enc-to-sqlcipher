@@ -44,7 +44,7 @@ namespace ig_sqlite_legacy_encryption_to_sqlcipher_decrypt
                 Password = password
             };
 
-            return connectionString + ";";
+            return connectionString;
         }
     }
 }

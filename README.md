@@ -1,0 +1,1 @@
+# sqlite-legacy-enc-to-sqlcipher-1

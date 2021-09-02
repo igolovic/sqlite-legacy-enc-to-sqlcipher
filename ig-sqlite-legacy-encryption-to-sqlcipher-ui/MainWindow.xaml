@@ -18,11 +18,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0">Legacy encrypted database:</Label>
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SqliteLegacyEncryptionFilePath}" IsEnabled="False" />
-        <Button Grid.Row="0" Grid.Column="2" Command="{Binding SqliteLegacyEncryptedFileSelectCommand}" Content="Select" ToolTip="Select database file with legacy System.Data.SQLite encryption (unsupported SQLITE_HAS_CODEC feature)" />
+        <Button Grid.Row="0" Grid.Column="2" Command="{Binding SqliteLegacyEncryptedFileSelectCommand}" Content="Select" MinWidth="100" ToolTip="Select database file with legacy System.Data.SQLite encryption (unsupported SQLITE_HAS_CODEC feature)" />
 
         <Label Grid.Row="1" Grid.Column="0">Legacy encrypted password:</Label>
         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SqliteLegacyEncryptionPassword}" />
@@ -34,5 +35,7 @@
         <Label Grid.Row="3" Grid.Column="1" Name="lblEncryptedPath" FontWeight="Bold" Content="{Binding EncryptedPath}"></Label>
 
         <Button Grid.Row="4" Grid.Column="2" Command="{Binding SqliteLegacyEncryptionFileConvertCommand}" Content="Convert" Width="100" />
+        <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Bottom" FontStyle="Italic" Content="{Binding StatusMessage}"></Label>
+        
     </Grid>
 </Window>

@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
@@ -24,7 +23,7 @@ namespace ig_sqlite_legacy_to_sqlcipher_ui
             set
             {
                 _sqliteLegacyEncryptionFilePath = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(SqliteLegacyEncryptionFilePath));
             }
         }
 
@@ -35,7 +34,7 @@ namespace ig_sqlite_legacy_to_sqlcipher_ui
             set
             {
                 _sqliteLegacyEncryptionPassword = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(SqliteLegacyEncryptionPassword));
             }
         }
         
@@ -46,7 +45,7 @@ namespace ig_sqlite_legacy_to_sqlcipher_ui
             set
             {
                 _clearPath = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(ClearPath));
             }
         }
 
@@ -57,7 +56,18 @@ namespace ig_sqlite_legacy_to_sqlcipher_ui
             set
             {
                 _encryptedPath = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(EncryptedPath));
+            }
+        }
+
+        private string _statusMessage = "Please populate path to legacy encrypted file and password";
+        public string StatusMessage
+        {
+            get { return _statusMessage; }
+            set
+            {
+                _statusMessage = value;
+                OnPropertyChanged(nameof(StatusMessage));
             }
         }
 
@@ -112,32 +122,43 @@ namespace ig_sqlite_legacy_to_sqlcipher_ui
         {
             try
             {
+                Common.DeleteCreatedDatabaseFiles(SqliteLegacyEncryptionFilePath);
+
                 /* Decrypt legacy encrypted file by starting console application that decrypts legacy System.Data.SQLite encryption.
                  * 
                  * This is used because of "SQL logic error - No such function: sqlcipher_export()" problem, where seemingly versions
                  * of System.Data.SQLite get mixed up. 
                  * Once the old version of sqlite (in System.Data.SQLite 1.0.112.1 - pure sqlite) is executed for decryption of legacy database, 
-                 * new version of sqlite with sqlcipher (in System.Data.SQLite 4.4.3.0 - sqlite with sqlcipher) cannot be used in process.
+                 * new version of sqlite with sqlcipher (in System.Data.SQLite 4.4.3.0 - sqlite with sqlcipher, *unlicensed demo version*) cannot be used in process.
                  * Commands used to encrypt clear database into SqlCipher cannot succeed because of said error.
                  * 
-                 * Although Modules view shows correct System.Data.SQLite 4.4.3.0 loaded and not the old version (especially in experiment in separate AppDomains).
+                 * Although Modules view shows correct System.Data.SQLite 4.4.3.0 loaded and not the old version (especially in experiment with separate AppDomains -
+                 * https://github.com/igolovic/sqlite-legacy-enc-to-sqlcipher-2.git ).
                  * Error is thrown as if the sqlcipher_export does not exist.
                  * 
                  * If decryption with old System.Data.SQLite 1.0.112.1 is performed in separate process and new encryption in another, everything works.
                 */
 
-                Process.Start(@"DECRYPT\ig.sqlite-legacy-encryption-to-sqlcipher.decrypt.exe", $"\"{SqliteLegacyEncryptionFilePath}\" \"{SqliteLegacyEncryptionPassword}\"");
+                StatusMessage = "Please wait while decryption process finishes...";
+
+                var process = Process.Start(@"DECRYPT\ig.sqlite-legacy-encryption-to-sqlcipher.decrypt.exe", $"\"{SqliteLegacyEncryptionFilePath}\" \"{SqliteLegacyEncryptionPassword}\"");
+                process.WaitForExit();
+                
+                StatusMessage = "Decryption process finished.";
 
                 var clearFilePath = Common.GetClearDatabaseFilePath(SqliteLegacyEncryptionFilePath);
                 if (File.Exists(clearFilePath))
                 {
                     ClearPath = clearFilePath;
+                    StatusMessage = "Please wait while encryption process finishes...";
 
                     var success = Encrypt.EncryptSqlCipher(clearFilePath, SqliteLegacyEncryptionPassword);
                     if (success)
                     {
                         var sqlCipherPath = Common.GetSqlCipherEncryptedDatabasePath(clearFilePath);
+                        
                         EncryptedPath = sqlCipherPath;
+                        StatusMessage = "Encryption process finished.";
                     }
                 }
             }
@@ -145,7 +166,11 @@ namespace ig_sqlite_legacy_to_sqlcipher_ui
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
+            finally
+            {
+                StatusMessage = "Please populate path to legacy encrypted file and password";
+            }
+}
 
         // Create the OnPropertyChanged method to raise the event
         // The calling member's name will be used as the parameter.

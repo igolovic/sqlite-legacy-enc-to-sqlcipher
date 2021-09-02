@@ -1,0 +1,15 @@
+[ TERMS OF USE ]
+
+This SQLCipher software package may only be used under the terms of a separate License agreement between you and Zetetic, LLC.
+
+Please review the applicable License, which contains important terms, conditions, and the License grant for the software, prior to use. 
+
+By using this software you agree to abide by the terms of the applicable License. 
+
+Please contact Zetetic, LLC at support@zetetic.net if you:
+
+1. have not yet executed a License agreement
+2. are unsure of your License status
+3. need of a copy of the applicable License; or
+4. have any questions about License terms
+

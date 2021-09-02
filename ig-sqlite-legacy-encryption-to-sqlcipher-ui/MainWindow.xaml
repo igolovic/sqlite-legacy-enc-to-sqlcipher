@@ -1,0 +1,42 @@
+﻿<Window x:Class="ig_sqlite_legacy_to_sqlcipher_ui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ig_sqlite_legacy_to_sqlcipher_ui"
+        mc:Ignorable="d"
+                Title="Convert SQLite with legacy encryption to SQLite with SqlCipher" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0" Grid.Column="0" Command="{Binding SqliteLegacyEncryptionSelectCommand}" Content="Select legacy encrypted db" ToolTip="Select database file with legacy System.Data.SQLite encryption (unsupported SQLITE_HAS_CODEC feature)" />
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SqliteLegacyEncryptionFilePath}" IsEnabled="False" />
+
+        <Label Grid.Row="1" Grid.Column="0">Legacy encrypted password:</Label>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SqliteLegacyEncryptionPassword}" />
+
+        <Button Grid.Row="2" Grid.Column="0" Command="{Binding SqliteLegacyEncryptionFileConvertCommand}" Content="Convert: legacy -> clear -> SqlCipher" Width="250" />
+        <Grid Grid.Row="2" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <Label>Clear database (decrypted legacy):</Label>
+                <Label Name="lblClearPath" FontWeight="Bold" Content="{Binding ClearPath}"></Label>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Label>SqlCipher-encrypted database (encrypted clear):</Label>
+                <Label Name="lblEncryptedPath" FontWeight="Bold" Content="{Binding EncryptedPath}"></Label>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

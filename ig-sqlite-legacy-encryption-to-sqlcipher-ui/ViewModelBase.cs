@@ -61,12 +61,12 @@ namespace ig_sqlite_legacy_to_sqlcipher_ui
             }
         }
 
-        private ICommand _sqliteLegacyEncryptionSelectCommand;
-        public ICommand SqliteLegacyEncryptionSelectCommand
+        private ICommand _sqliteLegacyEncryptedFileSelectCommand;
+        public ICommand SqliteLegacyEncryptedFileSelectCommand
         {
             get
             {
-                return _sqliteLegacyEncryptionSelectCommand ?? (_sqliteLegacyEncryptionSelectCommand = new CommandHandler(() => SelectSqliteLegacyEncryptionFile(), () => true));
+                return _sqliteLegacyEncryptedFileSelectCommand ?? (_sqliteLegacyEncryptedFileSelectCommand = new CommandHandler(() => SelectSqliteLegacyEncryptionFile(), () => true));
             }
         }
 

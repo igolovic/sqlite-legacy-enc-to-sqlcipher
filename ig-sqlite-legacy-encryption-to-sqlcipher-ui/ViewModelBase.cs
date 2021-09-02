@@ -124,21 +124,6 @@ namespace ig_sqlite_legacy_to_sqlcipher_ui
             {
                 Common.DeleteCreatedDatabaseFiles(SqliteLegacyEncryptionFilePath);
 
-                /* Decrypt legacy encrypted file by starting console application that decrypts legacy System.Data.SQLite encryption.
-                 * 
-                 * This is used because of "SQL logic error - No such function: sqlcipher_export()" problem, where seemingly versions
-                 * of System.Data.SQLite get mixed up. 
-                 * Once the old version of sqlite (in System.Data.SQLite 1.0.112.1 - pure sqlite) is executed for decryption of legacy database, 
-                 * new version of sqlite with sqlcipher (in System.Data.SQLite 4.4.3.0 - sqlite with sqlcipher, *unlicensed demo version*) cannot be used in process.
-                 * Commands used to encrypt clear database into SqlCipher cannot succeed because of said error.
-                 * 
-                 * Although Modules view shows correct System.Data.SQLite 4.4.3.0 loaded and not the old version (especially in experiment with separate AppDomains -
-                 * https://github.com/igolovic/sqlite-legacy-enc-to-sqlcipher-2.git ).
-                 * Error is thrown as if the sqlcipher_export does not exist.
-                 * 
-                 * If decryption with old System.Data.SQLite 1.0.112.1 is performed in separate process and new encryption in another, everything works.
-                */
-
                 StatusMessage = "Please wait while decryption process finishes...";
 
                 var process = Process.Start(@"DECRYPT\ig.sqlite-legacy-encryption-to-sqlcipher.decrypt.exe", $"\"{SqliteLegacyEncryptionFilePath}\" \"{SqliteLegacyEncryptionPassword}\"");

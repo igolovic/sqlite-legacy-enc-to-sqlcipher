@@ -35,7 +35,8 @@
         <Label Grid.Row="3" Grid.Column="1" Name="lblEncryptedPath" FontWeight="Bold" Content="{Binding EncryptedPath}"></Label>
 
         <Button Grid.Row="4" Grid.Column="2" Command="{Binding SqliteLegacyEncryptionFileConvertCommand}" Content="Convert" Width="100" />
-        <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Bottom" FontStyle="Italic" Content="{Binding StatusMessage}"></Label>
-        
+        <ScrollViewer Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" >
+            <TextBlock TextWrapping="WrapWithOverflow" VerticalAlignment="Top" Text="{Binding StatusMessage}"></TextBlock>
+        </ScrollViewer>
     </Grid>
 </Window>

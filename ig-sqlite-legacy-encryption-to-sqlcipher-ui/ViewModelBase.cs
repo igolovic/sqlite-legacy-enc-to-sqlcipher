@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -118,42 +119,45 @@ namespace ig_sqlite_legacy_to_sqlcipher_ui
             }
         }
                 
-        public void ConvertSqliteLegacyEncryptionFile()
+        public async void ConvertSqliteLegacyEncryptionFile()
         {
             try
             {
                 Common.DeleteCreatedDatabaseFiles(SqliteLegacyEncryptionFilePath);
 
-                StatusMessage = "Please wait while decryption process finishes...";
+                StatusMessage = String.Concat(StatusMessage, Environment.NewLine, DateTime.Now.ToLongTimeString(), " - Please wait while decryption process finishes...");
 
-                var process = Process.Start(@"DECRYPT\ig.sqlite-legacy-encryption-to-sqlcipher.decrypt.exe", $"\"{SqliteLegacyEncryptionFilePath}\" \"{SqliteLegacyEncryptionPassword}\"");
-                process.WaitForExit();
-                
-                StatusMessage = "Decryption process finished.";
+                await Task.Run(() => {
+                    var process = Process.Start(@"DECRYPT\ig.sqlite-legacy-encryption-to-sqlcipher.decrypt.exe", $"\"{SqliteLegacyEncryptionFilePath}\" \"{SqliteLegacyEncryptionPassword}\"");
+                    process.WaitForExit();
+                });
+
+                StatusMessage = String.Concat(StatusMessage, Environment.NewLine, DateTime.Now.ToLongTimeString(), " - Decryption process finished.");
 
                 var clearFilePath = Common.GetClearDatabaseFilePath(SqliteLegacyEncryptionFilePath);
                 if (File.Exists(clearFilePath))
                 {
                     ClearPath = clearFilePath;
-                    StatusMessage = "Please wait while encryption process finishes...";
+                    StatusMessage = String.Concat(StatusMessage, Environment.NewLine, DateTime.Now.ToLongTimeString(), " - Please wait while encryption process finishes...");
 
-                    var success = Encrypt.EncryptSqlCipher(clearFilePath, SqliteLegacyEncryptionPassword);
-                    if (success)
+                    await Task.Run(() =>
                     {
-                        var sqlCipherPath = Common.GetSqlCipherEncryptedDatabasePath(clearFilePath);
-                        
-                        EncryptedPath = sqlCipherPath;
-                        StatusMessage = "Encryption process finished.";
-                    }
+                        var success = Encrypt.EncryptSqlCipher(clearFilePath, SqliteLegacyEncryptionPassword);
+                        if (success)
+                        {
+                            var sqlCipherPath = Common.GetSqlCipherEncryptedDatabasePath(clearFilePath);
+
+                            EncryptedPath = sqlCipherPath;
+                            Application.Current.Dispatcher.Invoke(() => {
+                                StatusMessage = String.Concat(StatusMessage, Environment.NewLine, DateTime.Now.ToLongTimeString(), " - Encryption process finished.");
+                                });
+                        }
+                    });
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-                StatusMessage = "Please populate path to legacy encrypted file and password";
             }
 }
 

@@ -17,3 +17,6 @@ Although Modules view shows correct System.Data.SQLite 4.4.3.0 loaded and not th
 Error is thrown as if the sqlcipher_export does not exist.   
    
 If decryption with old System.Data.SQLite 1.0.112.1 is performed in separate process and new encryption in another, everything works.   
+
+Screenshot while running on Windows 10:
+![screenshot](./screenshot.png?raw=true)

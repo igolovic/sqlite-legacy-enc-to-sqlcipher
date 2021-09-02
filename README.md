@@ -3,10 +3,11 @@
 Conversion of SQLite CryptoAPI-legacy-encrypted database to SqlCipher-encrypted database   
      
 Libraries used:   
-System.Data.SQLite 1.0.112.1   
-System.Data.SQLite 4.4.3.0 - sqlite with sqlcipher, unlicensed demo version    
+System.Data.SQLite 1.0.112.1 - official arhcived version - http://nuget.yuanbei.biz/feeds/Default/System.Data.SQLite.Core/1.0.112.1   
+System.Data.SQLite 4.4.3.0 - sqlite with sqlcipher, unlicensed demo version - https://www.zetetic.net/sqlcipher/   
     
-Decrypt legacy encrypted file by starting console application that decrypts legacy System.Data.SQLite encryption.
+Application decrypts legacy System.Data.SQLite-encrypted database file in console application.   
+It encrypts produced clear database file using SqlCipher in main Windows application.    
                  
 Implementation with two process (console and Windows application) is used because of "SQL logic error - No such function: sqlcipher_export()" problem, where seemingly versions of System.Data.SQLite get mixed up.   
 Once the old version of sqlite (in System.Data.SQLite 1.0.112.1 - pure sqlite) is executed for decryption of legacy database, new version of sqlite with sqlcipher (in System.Data.SQLite 4.4.3.0 - sqlite with sqlcipher, unlicensed demo version) cannot be used in process.   

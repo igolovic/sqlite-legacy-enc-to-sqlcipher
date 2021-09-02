@@ -123,6 +123,8 @@ namespace ig_sqlite_legacy_to_sqlcipher_ui
         {
             try
             {
+                StatusMessage = String.Concat(StatusMessage, Environment.NewLine, DateTime.Now.ToLongTimeString(), " - Deleting .clear.sqlite and .clear.sqlcipher.sqlite files if any are found...");
+
                 Common.DeleteCreatedDatabaseFiles(SqliteLegacyEncryptionFilePath);
 
                 StatusMessage = String.Concat(StatusMessage, Environment.NewLine, DateTime.Now.ToLongTimeString(), " - Please wait while decryption process finishes...");
@@ -148,9 +150,10 @@ namespace ig_sqlite_legacy_to_sqlcipher_ui
                             var sqlCipherPath = Common.GetSqlCipherEncryptedDatabasePath(clearFilePath);
 
                             EncryptedPath = sqlCipherPath;
-                            Application.Current.Dispatcher.Invoke(() => {
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
                                 StatusMessage = String.Concat(StatusMessage, Environment.NewLine, DateTime.Now.ToLongTimeString(), " - Encryption process finished.");
-                                });
+                            });
                         }
                     });
                 }
